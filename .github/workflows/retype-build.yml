@@ -66,10 +66,10 @@ jobs:
           host_bucket = %(bucket)s.storage.yandexcloud.net
           use_https = True
           EOF
-          s3cmd sync --acl-public --delete-removed \
-            .retype/assets/ s3://docs-telefon1c-cdn/${{ inputs.s3-prefix }}/assets/
-          s3cmd sync --acl-public --delete-removed \
-            .retype/resources/ s3://docs-telefon1c-cdn/${{ inputs.s3-prefix }}/resources/
+          [ -d .retype/assets ] && s3cmd sync --acl-public --delete-removed \
+            .retype/assets/ s3://docs-telefon1c-cdn/${{ inputs.s3-prefix }}/assets/ || echo "No assets/ directory, skipping"
+          [ -d .retype/resources ] && s3cmd sync --acl-public --delete-removed \
+            .retype/resources/ s3://docs-telefon1c-cdn/${{ inputs.s3-prefix }}/resources/ || echo "No resources/ directory, skipping"
 
       # Docker build + push
       - uses: docker/setup-buildx-action@v3
