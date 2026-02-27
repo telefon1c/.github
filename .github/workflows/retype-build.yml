@@ -77,9 +77,9 @@ jobs:
               .retype/resources/ "${S3_PREFIX}/resources/"
           fi
           # Fix CSS Content-Type (s3cmd не определяет MIME для .css)
-          for css in $(find .retype -name '*.css' 2>/dev/null); do
+          find .retype -name '*.css' 2>/dev/null | while read css; do
             s3_path="${S3_PREFIX}/${css#.retype/}"
-            s3cmd modify --mime-type="text/css" "${s3_path}"
+            s3cmd put --acl-public --mime-type="text/css" "${css}" "${s3_path}"
           done
 
       # Fetch Dockerfile and nginx config from docs-k8s
