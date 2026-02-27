@@ -68,10 +68,16 @@ jobs:
           guess_mime_type = True
           EOF
           S3_PREFIX="s3://docs-telefon1c-cdn/${{ inputs.s3-prefix }}"
-          [ -d .retype/assets ] && s3cmd sync --acl-public --delete-removed --no-check-md5 \
-            .retype/assets/ "${S3_PREFIX}/assets/" || echo "No assets/ directory, skipping"
-          [ -d .retype/resources ] && s3cmd sync --acl-public --delete-removed --no-check-md5 \
-            .retype/resources/ "${S3_PREFIX}/resources/" || echo "No resources/ directory, skipping"
+          if [ -d .retype/assets ]; then
+            s3cmd del --recursive "${S3_PREFIX}/assets/" 2>/dev/null || true
+            s3cmd sync --acl-public --no-check-md5 \
+              .retype/assets/ "${S3_PREFIX}/assets/"
+          fi
+          if [ -d .retype/resources ]; then
+            s3cmd del --recursive "${S3_PREFIX}/resources/" 2>/dev/null || true
+            s3cmd sync --acl-public --no-check-md5 \
+              .retype/resources/ "${S3_PREFIX}/resources/"
+          fi
 
       # Fetch Dockerfile and nginx config from docs-k8s
       - name: Fetch Docker infrastructure
