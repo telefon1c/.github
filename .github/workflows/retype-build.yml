@@ -66,9 +66,9 @@ jobs:
           host_bucket = %(bucket)s.storage.yandexcloud.net
           use_https = True
           EOF
-          [ -d .retype/assets ] && s3cmd sync --acl-public --delete-removed \
+          [ -d .retype/assets ] && s3cmd sync --acl-public --delete-removed --guess-mime-type \
             .retype/assets/ s3://docs-telefon1c-cdn/${{ inputs.s3-prefix }}/assets/ || echo "No assets/ directory, skipping"
-          [ -d .retype/resources ] && s3cmd sync --acl-public --delete-removed \
+          [ -d .retype/resources ] && s3cmd sync --acl-public --delete-removed --guess-mime-type \
             .retype/resources/ s3://docs-telefon1c-cdn/${{ inputs.s3-prefix }}/resources/ || echo "No resources/ directory, skipping"
 
       # Fetch Dockerfile and nginx config from docs-k8s
