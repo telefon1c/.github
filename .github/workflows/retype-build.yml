@@ -71,6 +71,15 @@ jobs:
           [ -d .retype/resources ] && s3cmd sync --acl-public --delete-removed \
             .retype/resources/ s3://docs-telefon1c-cdn/${{ inputs.s3-prefix }}/resources/ || echo "No resources/ directory, skipping"
 
+      # Fetch Dockerfile and nginx config from docs-k8s
+      - name: Fetch Docker infrastructure
+        run: |
+          git clone --depth 1 --filter=blob:none --sparse \
+            https://github.com/telefon1c/docs-k8s.git /tmp/docs-k8s
+          cd /tmp/docs-k8s && git sparse-checkout set ${{ inputs.s3-prefix }}
+          cp /tmp/docs-k8s/${{ inputs.s3-prefix }}/Dockerfile ./Dockerfile
+          cp -r /tmp/docs-k8s/${{ inputs.s3-prefix }}/nginx ./nginx
+
       # Docker build + push
       - uses: docker/setup-buildx-action@v3
 
