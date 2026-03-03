@@ -28,16 +28,16 @@ jobs:
     permissions:
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 10.x
 
       # Build Retype
-      - uses: retypeapp/action-build@v3.5.0
+      - uses: retypeapp/action-build@latest
         with:
-          license: ${{ secrets.RETYPE_SECRET }}
+          key: ${{ secrets.RETYPE_SECRET }}
 
       # Copy Retype output to .retype/ for S3 and Docker
       - name: Copy Retype output
