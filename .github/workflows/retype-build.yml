@@ -34,6 +34,12 @@ jobs:
         with:
           dotnet-version: 10.x
 
+      # Patch url in retype.yml to include version prefix for deployment
+      - name: Patch retype.yml url
+        run: |
+          sed -i "s|^url:.*|url: https://docs.telefon1c.ru/${{ inputs.s3-prefix }}/|" retype.yml
+          grep '^url:' retype.yml
+
       # Build Retype
       - uses: retypeapp/action-build@latest
         with:
