@@ -41,9 +41,13 @@ jobs:
           grep '^url:' retype.yml
 
       # Build Retype
+      # DOTNET_PROCESSOR_COUNT=1 сериализует параллельный рендеринг Retype 4.6.0 —
+      # обход недетерминированной гонки "capacity must be non-negative" на части страниц.
       - uses: retypeapp/action-build@latest
         with:
           key: ${{ secrets.RETYPE_SECRET }}
+        env:
+          DOTNET_PROCESSOR_COUNT: "1"
 
       # Copy Retype output to .retype/ for S3 and Docker
       - name: Copy Retype output
